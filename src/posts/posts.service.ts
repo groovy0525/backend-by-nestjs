@@ -33,8 +33,6 @@ export class PostsService {
     const page = parseInt(query.page);
     const { username, tag } = query;
 
-    console.log(query);
-
     if (page < 1) {
       console.log(typeof query.page);
       throw new BadRequestException();
@@ -66,6 +64,8 @@ export class PostsService {
     if (!post) {
       throw new NotFoundException();
     }
+
+    return post;
   }
 
   async remove(postId: string, user: User) {

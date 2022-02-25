@@ -15,8 +15,11 @@ export class UsersController {
   ) {}
 
   @Post('signup')
-  signUp(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.signUp(createUserDto);
+  async signUp(@Body() createUserDto: CreateUserDto) {
+    const result = await this.usersService.signUp(createUserDto);
+    if (result) {
+      return this.signIn(createUserDto);
+    }
   }
 
   @Post('signin')
@@ -24,9 +27,9 @@ export class UsersController {
     return this.authService.signIn(signInUserDto);
   }
 
-  @Get()
+  @Get('check')
   @UseGuards(JwtAuthGuard)
   getCurrentUser(@GetUser() user: ResponseUserDto) {
-    console.log(user);
+    return user;
   }
 }

@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './schemas/user.schema';
-import { ResponseUserDto } from './dto/response-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -14,7 +13,7 @@ export class UsersService {
     return await this.userModel.findOne({ username });
   }
 
-  async signUp(createUserDto: CreateUserDto): Promise<ResponseUserDto> {
+  async signUp(createUserDto: CreateUserDto): Promise<boolean> {
     const { username, password } = createUserDto;
 
     const isExist = await this.userModel.exists({ username });
@@ -25,11 +24,11 @@ export class UsersService {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await this.userModel.create({
+    await this.userModel.create({
       username,
       password: hashedPassword,
     });
 
-    return user.returnData;
+    return true;
   }
 }
